@@ -1,7 +1,13 @@
-import React from "react";
+import React from 'react'
+import { Routes, Route } from 'react-router-dom'
+import Products from './pages/Products'
 
-function App() {
-  return <div className="App">App</div>;
+const App = () => {
+  return (
+    <Routes>
+    <Route path="/" element={<Products />} />
+  </Routes>
+  )
 }
 
-export default App;
+export default App
