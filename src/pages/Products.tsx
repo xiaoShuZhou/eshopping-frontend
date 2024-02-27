@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { fetchProducts } from '../redux/slices/productSlice';
+import { getProducts } from '../redux/slices/productSlice';
 import { Grid, Card, CardMedia, CardContent, Typography, CircularProgress } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const Products: React.FC = () => {
   const dispatch = useAppDispatch();
   const { products, loading, error } = useAppSelector((state) => state.product);
 
   useEffect(() => {
-    dispatch(fetchProducts());
+    dispatch(getProducts());
   }, [dispatch]);
 
   if (loading) return <CircularProgress />;
@@ -22,12 +23,12 @@ const Products: React.FC = () => {
             <CardMedia
               component="img"
               height="140"
-              image={product.images[0]}
+              image={JSON.parse(product.images[0])[0]}
               alt={product.title}
             />
             <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                {product.title}
+            <Typography gutterBottom variant="h5" component="div">
+                <Link to={`/product/${product.id}`}>{product.title}</Link>
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 {product.description}
