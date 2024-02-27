@@ -3,10 +3,13 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { getProducts } from '../redux/slices/productSlice';
 import { Grid, Card, CardMedia, CardContent, Typography, CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { getImageUrl } from '../misc/uploadFileService';
+
 
 const Products: React.FC = () => {
   const dispatch = useAppDispatch();
   const { products, loading, error } = useAppSelector((state) => state.product);
+
 
   useEffect(() => {
     dispatch(getProducts());
@@ -23,7 +26,7 @@ const Products: React.FC = () => {
             <CardMedia
               component="img"
               height="140"
-              image={JSON.parse(product.images[0])[0]}
+              image={getImageUrl(product.images[0])}
               alt={product.title}
             />
             <CardContent>

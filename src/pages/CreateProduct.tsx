@@ -5,7 +5,7 @@ import { useAppDispatch } from '../redux/hooks';
 import { createProduct } from '../redux/slices/productSlice';
 import { Button, TextField, Typography, Container, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import uploadImage from '../misc/uploadFileService';
+import {uploadImage} from '../misc/uploadFileService';
 
 const CreateProduct: React.FC = () => {
   const dispatch = useAppDispatch();
