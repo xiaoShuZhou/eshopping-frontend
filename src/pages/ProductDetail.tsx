@@ -4,6 +4,8 @@ import { getProductDetail } from '../redux/slices/productSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { getImageUrl } from '../misc/uploadFileService';
 import { addToCart } from '../redux/slices/cartSlice';
+import { deleteProduct } from '../redux/slices/productSlice';
+import { Link} from 'react-router-dom'
 
 const ProductDetail = () => {
   const { productId } = useParams();
@@ -29,6 +31,12 @@ const ProductDetail = () => {
     }
   };
 
+  const handleDeleteProduct = () => {
+    if (product && window.confirm('Are you sure you want to delete this product?')) {
+      dispatch(deleteProduct(Number(productId)));
+    }
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!product) return <div>Product not found!</div>;
@@ -44,6 +52,8 @@ const ProductDetail = () => {
       ) : (
         <button onClick={handleAddToCart}>Add to Cart</button>
       )}
+    <button onClick={handleDeleteProduct}>Delete Product</button>
+    <Link to={`/update-product/${product.id}`}>Update Product</Link>
     </div>
   );
 };

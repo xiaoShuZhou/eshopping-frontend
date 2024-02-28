@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { Product, ProductState,NewProduct } from '../../types/product';
+import { ProductState,NewProduct,UpdatedProduct } from '../../types/product';
 
 import axios, { AxiosError } from 'axios';
 
@@ -15,17 +15,56 @@ const initialState: ProductState = {
 // Async thunk for fetching products
 export const getProducts = createAsyncThunk(
   'product/fetchProducts',
-  async () => {
-    const response = await axios.get(BASE_URL + '/products');
-    return response.data;
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(BASE_URL + '/products');
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError; 
+      if (err.response) {
+        return rejectWithValue(err.response.data);
+      } else {
+        return rejectWithValue('An unexpected error occurred fetching products');
+      }
+    }
   }
 );
 
 export const getProductDetail = createAsyncThunk(
   'product/fetchProductDetail',
-  async (productId: number) => {
-    const response = await axios.get(BASE_URL + `/products/${productId}`);
-    return response.data;
+  async (productId: number, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(BASE_URL + `/products/${productId}`);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError; // Type assertion here
+      if (err.response) {
+        return rejectWithValue(err.response.data);
+      } else {
+        return rejectWithValue('An unexpected error occurred fetching product details');
+      }
+    }
+  }
+);
+
+export const deleteProduct = createAsyncThunk(
+  'product/deleteProduct',
+  async (productId: number, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(`https://api.escuelajs.co/api/v1/products/${productId}`);
+      if (response.data === true) {
+        return productId;
+      } else {
+        return rejectWithValue('Failed to delete the product');
+      }
+    } catch (error) {
+      const err = error as AxiosError;
+      if (err.response) {
+        return rejectWithValue(err.response.data);
+      } else {
+        return rejectWithValue('An unexpected error occurred deleting the product');
+      }
+    }
   }
 );
 
@@ -41,9 +80,25 @@ export const createProduct = createAsyncThunk(
         console.error(err.response.data);
         return rejectWithValue(err.response.data);
       } else {
-        // Handle case where the error does not come from Axios
         console.error('An unexpected error occurred');
         return rejectWithValue('An unexpected error occurred');
+      }
+    }
+  }
+);
+
+export const updateProduct = createAsyncThunk(
+  'product/updateProduct',
+  async ({ id, updateData }: { id: number; updateData: UpdatedProduct }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${BASE_URL}/products/${id}`, updateData);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      if (err.response) {
+        return rejectWithValue(err.response.data);
+      } else {
+        return rejectWithValue('An unexpected error occurred updating the product');
       }
     }
   }
@@ -68,6 +123,7 @@ const productSlice = createSlice({
       state.loading = false;
       state.error = action.error.message || 'Something went wrong';
     });
+
     //get a product detail
     builder.addCase(getProductDetail.pending, (state) => {
       state.loading = true;
@@ -98,6 +154,34 @@ const productSlice = createSlice({
     builder.addCase(createProduct.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message || 'Something went wrong creating the product';
+    });
+
+    //delete a product
+    builder.addCase(deleteProduct.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(deleteProduct.fulfilled, (state, action) => {
+      state.products = state.products.filter(product => product.id !== action.payload);
+      state.loading = false;
+    });
+    builder.addCase(deleteProduct.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message || 'Something went wrong deleting the product';
+    });
+
+    //update a product
+    builder.addCase(updateProduct.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateProduct.fulfilled, (state, action) => {
+      const index = state.products.findIndex(product => product.id === action.payload.id);
+      if (index !== -1) {
+        state.products[index] = action.payload;
+      }
+    });
+    builder.addCase(updateProduct.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message || 'Something went wrong updating the product';
     });
   },
 });
