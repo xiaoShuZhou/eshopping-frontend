@@ -6,6 +6,8 @@ import CreateProduct from './pages/CreateProduct'
 import Header from './components/Header'
 import Cart from './pages/Cart'
 import UpdateProduct from './pages/UpdateProduct'
+import Auth from './pages/Auth'
+import Profile from './pages/Profile'
 
 const App = () => {
   return (
@@ -17,6 +19,8 @@ const App = () => {
     <Route path="/post" element={<CreateProduct />} />
     <Route path="/update-product/:productId" element={<UpdateProduct />} />
     <Route path="/cart" element={<Cart />} />
+    <Route path="/auth" element={<Auth />} />
+    <Route path="/profile" element={<Profile />} />
 
   </Routes>
   </div>
