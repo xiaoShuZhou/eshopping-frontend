@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { useAppSelector } from '../redux/hooks';
-import { Badge } from "@mui/material";
+import { AppBar, Toolbar, Typography, Badge, IconButton, Button } from "@mui/material";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 import ThemeToggleButton from './ThemeToggleButton';
 
@@ -10,23 +11,30 @@ const Header = () => {
   const userRole = useAppSelector((state) => state.user.user?.role);
 
   return (
-    <header>
-      <div><Link to="/">FullStackHub</Link></div>
-      <Link to="/cart" color="inherit">
-        <Badge badgeContent={cartItems.length} color="secondary">
-          <ShoppingCartRoundedIcon sx={{ ml: 1, fontSize: 24 }} />
-        </Badge>
-      </Link>
-      <nav>
-        <Link to="/">Home</Link>
+    <AppBar position="static">
+      <Toolbar>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Button color="inherit" component={RouterLink} to="/">
+            FullStackHub
+          </Button>
+        </Typography>
         {userRole === 'admin' && (
-          <Link to="/post">Post</Link>
-      )}
-        <Link to="/cart">Cart</Link>
-        {user ? <Link to="/profile">Profile</Link> : <Link to="/auth">Login</Link>}
-      </nav>
-      <ThemeToggleButton />
-    </header>
+          <Button color="inherit" component={RouterLink} to="/post">
+            Post
+          </Button>
+        )}
+        <Button color="inherit" component={RouterLink} to={user ? "/profile" : "/auth"}>
+          {user ? "Profile" : "Login"}
+        </Button>
+        <Button color="inherit" component={RouterLink} to="/cart">
+          <Badge badgeContent={cartItems.length} color="secondary">
+            <ShoppingCartRoundedIcon />
+          </Badge>
+        </Button>
+
+        <ThemeToggleButton />
+      </Toolbar>
+    </AppBar>
   );
 }
 

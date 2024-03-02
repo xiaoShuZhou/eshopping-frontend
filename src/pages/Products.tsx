@@ -6,30 +6,32 @@ import { Grid, Card, CardMedia, CardContent, Typography, CircularProgress } from
 import { Link } from 'react-router-dom';
 import { getImageUrl } from '../misc/uploadFileService';
 import { useState } from 'react';
+import  Filter from '../components/Filter';
+import Pagination from '../components/Pagination';
 
 
 const Products: React.FC = () => {
   const dispatch = useAppDispatch();
   const { products, loading, error } = useAppSelector((state) => state.product);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage: number = 10; // Adjust based on your preference
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; 
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
 
   useEffect(() => {
-    const offset = (currentPage - 1) * itemsPerPage;
-    dispatch(getProducts({ offset, limit: itemsPerPage }));
-  }, [dispatch, currentPage]);
+    dispatch(getProducts());
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getCategories());
   }, [dispatch]);
-
-  const handlePreviousPage = () => {
-    setCurrentPage((prevPage) => Math.max(1, prevPage - 1));
-  };
-  
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-  };
 
   if (loading) return <CircularProgress />;
   if (error) return <p>Error: {error}</p>;
@@ -37,8 +39,10 @@ const Products: React.FC = () => {
 
   return (
     <div>
+    
     <Grid container spacing={2}>
-      {products.map((product) => (
+    <Filter />
+      {currentItems.map((product) => (
         <Grid item xs={12} sm={6} md={4} key={product.id}>
           <Card>
             <CardMedia
@@ -62,17 +66,13 @@ const Products: React.FC = () => {
         </Grid>
       ))}
     </Grid>
-    <div>
-      <button onClick={handlePreviousPage} disabled={currentPage === 1}>
-        Previous
-      </button>
-      <span>Page {currentPage}</span>
-      <button onClick={handleNextPage}>
-        Next
-      </button>
+    <Pagination 
+        totalItems={products.length} 
+        itemsPerPage={itemsPerPage} 
+        currentPage={currentPage} 
+        onPageChange={handlePageChange} 
+      />
     </div>
-    </div>
-    
   );
 };
 

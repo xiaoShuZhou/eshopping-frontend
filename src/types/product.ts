@@ -44,7 +44,9 @@ export type FilterParams = {
   categoryId?: number;
 }
 
-export type Pagination = {
-  offset: number;
-  limit: number;
-}
+export type PaginationProps = {
+  totalItems: number;
+  itemsPerPage: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+};
