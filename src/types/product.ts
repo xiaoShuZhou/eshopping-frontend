@@ -43,3 +43,8 @@ export type FilterParams = {
   priceMax?: number;
   categoryId?: number;
 }
+
+export type Pagination = {
+  offset: number;
+  limit: number;
+}

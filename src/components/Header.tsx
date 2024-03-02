@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useAppSelector } from '../redux/hooks';
 import { Badge } from "@mui/material";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
+import ThemeToggleButton from './ThemeToggleButton';
 
 const Header = () => {
   const cartItems = useAppSelector((state) => state.cart.items);
@@ -24,6 +25,7 @@ const Header = () => {
         <Link to="/cart">Cart</Link>
         {user ? <Link to="/profile">Profile</Link> : <Link to="/auth">Login</Link>}
       </nav>
+      <ThemeToggleButton />
     </header>
   );
 }

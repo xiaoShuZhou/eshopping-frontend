@@ -3,7 +3,7 @@ import { useAppDispatch } from '../redux/hooks';
 import { getProductsWithFilters } from '../redux/slices/productSlice'; // Adjust the import to your new thunk
 import { TextField, Button, Box } from '@mui/material';
 
-const FilterComponent = () => {
+const Filter= () => {
   const [title, setTitle] = useState('');
   const [priceMin, setPriceMin] = useState('');
   const [priceMax, setPriceMax] = useState('');
@@ -26,4 +26,4 @@ const FilterComponent = () => {
   );
 };
 
-export default FilterComponent;
+export default Filter;

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ProductState,NewProduct,UpdatedProduct, FilterParams  } from '../../types/product';
+import { ProductState,NewProduct,UpdatedProduct, FilterParams,Pagination  } from '../../types/product';
 
 import axios, { AxiosError } from 'axios';
 
@@ -15,9 +15,9 @@ const initialState: ProductState = {
 // Async thunk for fetching products
 export const getProducts = createAsyncThunk(
   'product/fetchProducts',
-  async (_, { rejectWithValue }) => {
+  async ({ offset, limit }:Pagination, { rejectWithValue }) => { // Accept pagination parameters
     try {
-      const response = await axios.get(BASE_URL + '/products');
+      const response = await axios.get(`${BASE_URL}/products?offset=${offset}&limit=${limit}`);
       return response.data;
     } catch (error) {
       const err = error as AxiosError; 

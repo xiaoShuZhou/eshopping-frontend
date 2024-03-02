@@ -9,10 +9,12 @@ import UpdateProduct from './pages/UpdateProduct'
 import Auth from './pages/Auth'
 import Profile from './pages/Profile'
 import Filter from './components/Filter'
+import CustomThemeProvider from './components/ThemeContext'
 
 const App = () => {
   return (
   <div>
+    <CustomThemeProvider>
   <Header />
   <Filter />
     <Routes>
@@ -25,6 +27,7 @@ const App = () => {
     <Route path="/profile" element={<Profile />} />
 
   </Routes>
+  </CustomThemeProvider>
   </div>
   )
 }

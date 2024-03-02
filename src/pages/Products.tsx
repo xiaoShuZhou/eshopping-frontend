@@ -5,25 +5,38 @@ import { getCategories } from '../redux/slices/categorySlice';
 import { Grid, Card, CardMedia, CardContent, Typography, CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { getImageUrl } from '../misc/uploadFileService';
+import { useState } from 'react';
 
 
 const Products: React.FC = () => {
   const dispatch = useAppDispatch();
   const { products, loading, error } = useAppSelector((state) => state.product);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage: number = 10; // Adjust based on your preference
 
   useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
+    const offset = (currentPage - 1) * itemsPerPage;
+    dispatch(getProducts({ offset, limit: itemsPerPage }));
+  }, [dispatch, currentPage]);
 
   useEffect(() => {
     dispatch(getCategories());
-  }
-  , [dispatch]);
+  }, [dispatch]);
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(1, prevPage - 1));
+  };
+  
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
 
   if (loading) return <CircularProgress />;
   if (error) return <p>Error: {error}</p>;
+  
 
   return (
+    <div>
     <Grid container spacing={2}>
       {products.map((product) => (
         <Grid item xs={12} sm={6} md={4} key={product.id}>
@@ -49,6 +62,17 @@ const Products: React.FC = () => {
         </Grid>
       ))}
     </Grid>
+    <div>
+      <button onClick={handlePreviousPage} disabled={currentPage === 1}>
+        Previous
+      </button>
+      <span>Page {currentPage}</span>
+      <button onClick={handleNextPage}>
+        Next
+      </button>
+    </div>
+    </div>
+    
   );
 };
 
