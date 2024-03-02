@@ -36,7 +36,10 @@ export type UpdatedProduct = {
   images?: string[];
 };
 
-export type PriceRangeParams = {
-  price_min: number;
-  price_max: number;
+
+export type FilterParams = {
+  title?: string;
+  priceMin?: number;
+  priceMax?: number;
+  categoryId?: number;
 }
