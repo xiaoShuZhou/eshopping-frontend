@@ -8,11 +8,13 @@ import Cart from './pages/Cart'
 import UpdateProduct from './pages/UpdateProduct'
 import Auth from './pages/Auth'
 import Profile from './pages/Profile'
+import Filter from './components/Filter'
 
 const App = () => {
   return (
   <div>
   <Header />
+  <Filter />
     <Routes>
     <Route path="/" element={<Products />} />
     <Route path="/product/:productId" element={<ProductDetail />} />

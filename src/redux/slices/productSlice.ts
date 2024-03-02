@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ProductState,NewProduct,UpdatedProduct } from '../../types/product';
+import { ProductState,NewProduct,UpdatedProduct, PriceRangeParams  } from '../../types/product';
 
 import axios, { AxiosError } from 'axios';
 
@@ -104,6 +104,61 @@ export const updateProduct = createAsyncThunk(
   }
 );
 
+// Async thunk for fetching products by title
+export const getProductsByTitle = createAsyncThunk(
+  'product/fetchProductsByTitle',
+  async (title: string, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/products?title=${title}`);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      if (err.response) {
+        return rejectWithValue(err.response.data);
+      } else {
+        return rejectWithValue('An unexpected error occurred fetching products by title');
+      }
+    }
+  }
+);
+
+// Async thunk for fetching products by price range
+export const getProductsByPriceRange = createAsyncThunk(
+  'product/fetchProductsByPriceRange',
+  async ({ price_min, price_max }: PriceRangeParams, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/products?price_min=${price_min}&price_max=${price_max}`);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      if (err.response) {
+        return rejectWithValue(err.response.data);
+      } else {
+        return rejectWithValue('An unexpected error occurred fetching products by price range');
+      }
+    }
+  }
+);
+
+export const getProductsByCategory = createAsyncThunk(
+  'product/fetchProductsByCategory',
+  async (categoryId: number, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/products?categoryId=${categoryId}`);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      if (err.response) {
+        return rejectWithValue(err.response.data);
+      } else {
+        return rejectWithValue('An unexpected error occurred fetching products by category');
+      }
+    }
+  }
+);
+
+
+
 
 // Create the slice
 const productSlice = createSlice({
@@ -183,6 +238,32 @@ const productSlice = createSlice({
       state.loading = false;
       state.error = action.error.message || 'Something went wrong updating the product';
     });
+
+    //get products by title
+    builder.addCase(getProductsByTitle.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getProductsByTitle.fulfilled, (state, action) => {
+      state.products = action.payload;
+      state.loading = false;
+    });
+    builder.addCase(getProductsByTitle.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message || 'Something went wrong fetching products by title';
+    });
+
+      // Handle products filtered by price range
+  
+    builder.addCase(getProductsByPriceRange.fulfilled, (state, action) => {
+    state.products = action.payload;
+    state.loading = false;
+  });
+
+  // Handle products filtered by category
+    builder.addCase(getProductsByCategory.fulfilled, (state, action) => {
+    state.products = action.payload;
+    state.loading = false;
+  });
   },
 });
 

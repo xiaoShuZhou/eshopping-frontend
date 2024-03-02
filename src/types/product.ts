@@ -35,3 +35,8 @@ export type UpdatedProduct = {
   categoryId?: number;
   images?: string[];
 };
+
+export type PriceRangeParams = {
+  price_min: number;
+  price_max: number;
+}
