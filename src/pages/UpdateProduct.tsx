@@ -12,9 +12,11 @@ const UpdateProduct: React.FC = () => {
   const { productId } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const categories = useAppSelector((state) => state.category);
   const product = useAppSelector((state) =>
     state.product.products.find((p) => p.id === Number(productId))
   );
+
   const [updatedProduct, setUpdatedProduct] = useState<UpdatedProduct>({
     title: '',
     price: 0,
@@ -36,6 +38,10 @@ const UpdateProduct: React.FC = () => {
       dispatch(getProductDetail(Number(productId)));
     }
   }, [dispatch, productId, product]);
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setUpdatedProduct({ ...updatedProduct, categoryId: Number(e.target.value) });
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUpdatedProduct({ ...updatedProduct, [e.target.name]: e.target.type === 'number' ? Number(e.target.value) : e.target.value });
@@ -99,16 +105,17 @@ const UpdateProduct: React.FC = () => {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={12}>
-            <TextField
-              name="categoryId"
-              label="Category ID"
-              type="number"
-              fullWidth
-              value={updatedProduct.categoryId}
-              onChange={handleChange}
-            />
-          </Grid>
+          <div>
+          <label>Category:</label>
+          <select name="categoryId" value={updatedProduct.categoryId} onChange={handleCategoryChange} required>
+            <option value="">Select a Category</option>
+            {categories.categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
           <Grid item xs={12}>
             <Button
               component="label"

@@ -46,6 +46,7 @@ const ProductDetail = () => {
       <h2>{product.title}</h2>
       <p>{product.description}</p>
       <p>${product.price}</p>
+      <p>{product.category.name}</p>
       <img src={getImageUrl(product.images[0])} alt={product.title} style={{width: '100px', height: '100px'}} />
       {isInCart ? (
         <button disabled>Item already added to cart</button>
@@ -54,10 +55,10 @@ const ProductDetail = () => {
       )}
       {/* Render Update and Delete buttons only for admin */}
       {userRole === 'admin' && (
-        <>
+        <div>
           <button onClick={handleDeleteProduct}>Delete Product</button>
           <Link to={`/update-product/${product.id}`}>Update Product</Link>
-        </>
+        </div>
       )}
     </div>
   );

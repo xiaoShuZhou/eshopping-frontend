@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { getProducts } from '../redux/slices/productSlice';
+import { getCategories } from '../redux/slices/categorySlice';
 import { Grid, Card, CardMedia, CardContent, Typography, CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { getImageUrl } from '../misc/uploadFileService';
@@ -10,10 +11,14 @@ const Products: React.FC = () => {
   const dispatch = useAppDispatch();
   const { products, loading, error } = useAppSelector((state) => state.product);
 
-
   useEffect(() => {
     dispatch(getProducts());
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getCategories());
+  }
+  , [dispatch]);
 
   if (loading) return <CircularProgress />;
   if (error) return <p>Error: {error}</p>;
@@ -34,7 +39,10 @@ const Products: React.FC = () => {
                 <Link to={`/product/${product.id}`}>{product.title}</Link>
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {product.description}
+                {product.category.name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                ${product.price}
               </Typography>
             </CardContent>
           </Card>

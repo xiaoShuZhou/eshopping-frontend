@@ -6,6 +6,7 @@ import { createProduct } from '../redux/slices/productSlice';
 import { Button, TextField, Typography, Container, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import {uploadImage} from '../misc/uploadFileService';
+import {useAppSelector} from '../redux/hooks';
 
 const CreateProduct: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -17,6 +18,11 @@ const CreateProduct: React.FC = () => {
     categoryId: 0, // Adjust based on your category structure
     images: ['https://example.com/default-image.jpg'], // Default image URL
   });
+  const categories = useAppSelector((state) => state.category);
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setNewProduct({ ...newProduct, categoryId: Number(e.target.value) });
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
@@ -88,16 +94,17 @@ const CreateProduct: React.FC = () => {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={12}>
-            <TextField
-              name="categoryId"
-              label="Category ID"
-              type="number"
-              fullWidth
-              value={newProduct.categoryId}
-              onChange={handleChange}
-            />
-          </Grid>
+          <div>
+          <label>Category:</label>
+          <select name="categoryId" value={newProduct.categoryId} onChange={handleCategoryChange} required>
+            <option value="">Select a Category</option>
+            {categories.categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
           <Grid item xs={12}>
             <Button
               component="label"
