@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { getProductDetail } from '../redux/slices/productSlice';
+import { useParams, Link } from 'react-router-dom';
+import { getProductDetail, deleteProduct } from '../redux/slices/productSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { getImageUrl } from '../misc/uploadFileService';
 import { addToCart } from '../redux/slices/cartSlice';
-import { deleteProduct } from '../redux/slices/productSlice';
-import { Link} from 'react-router-dom'
 
 const ProductDetail = () => {
   const { productId } = useParams();
   const dispatch = useAppDispatch();
+  // Select products, cart items, and user role from Redux store
   const { products, loading, error } = useAppSelector((state) => state.product);
   const cartItems = useAppSelector((state) => state.cart.items);
+  const userRole = useAppSelector((state) => state.user.user?.role); // Select user role
+
   const product = products.find(p => p.id === Number(productId));
   const [isInCart, setIsInCart] = useState(false);
 
@@ -19,15 +20,14 @@ const ProductDetail = () => {
     if (productId) {
       dispatch(getProductDetail(Number(productId)));
     }
-
     // Check if product is in the cart
     setIsInCart(cartItems.some(item => item.id === Number(productId)));
-  }, [dispatch, productId, cartItems]); // Add cartItems to the dependency array
+  }, [dispatch, productId, cartItems]);
 
   const handleAddToCart = () => {
     if (product) {
       dispatch(addToCart({ item: { ...product, quantity: 1 } }));
-      setIsInCart(true); // Set isInCart to true after adding to cart
+      setIsInCart(true);
     }
   };
 
@@ -52,8 +52,13 @@ const ProductDetail = () => {
       ) : (
         <button onClick={handleAddToCart}>Add to Cart</button>
       )}
-    <button onClick={handleDeleteProduct}>Delete Product</button>
-    <Link to={`/update-product/${product.id}`}>Update Product</Link>
+      {/* Render Update and Delete buttons only for admin */}
+      {userRole === 'admin' && (
+        <>
+          <button onClick={handleDeleteProduct}>Delete Product</button>
+          <Link to={`/update-product/${product.id}`}>Update Product</Link>
+        </>
+      )}
     </div>
   );
 };

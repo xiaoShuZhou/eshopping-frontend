@@ -13,6 +13,7 @@ export const login = createAsyncThunk(
       const response = await axios.post(`${BASE_URL}/auth/login`, credentials);
       const tokens: AuthTokens = response.data
       localStorage.setItem("token", tokens.access_token);
+      
       return response.data;
 
     } catch (error) {

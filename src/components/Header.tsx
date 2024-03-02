@@ -6,6 +6,7 @@ import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 const Header = () => {
   const cartItems = useAppSelector((state) => state.cart.items);
   const user = useAppSelector((state) => state.user.user); 
+  const userRole = useAppSelector((state) => state.user.user?.role);
 
   return (
     <header>
@@ -17,7 +18,9 @@ const Header = () => {
       </Link>
       <nav>
         <Link to="/">Home</Link>
-        <Link to="/post">Post</Link>
+        {userRole === 'admin' && (
+          <Link to="/post">Post</Link>
+      )}
         <Link to="/cart">Cart</Link>
         {user ? <Link to="/profile">Profile</Link> : <Link to="/auth">Login</Link>}
       </nav>
