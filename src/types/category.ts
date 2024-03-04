@@ -1,7 +1,9 @@
 export type Category = {
   id: number;
   name: string;
-  image: string;
+  image?: string;
+  creationAt?: string;
+  updatedAt?: string;
 };
 
 export type CategoryState = {

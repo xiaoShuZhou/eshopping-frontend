@@ -14,5 +14,16 @@ export const store = configureStore({
 });
 console.log(store.getState())
 
+export const testStore = () => {
+  return configureStore({
+    reducer: {
+      product: productReducer,
+      user: userReducer,
+      cart: cartReducer,
+      category: categoryReducer,
+    },
+  });
+};
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

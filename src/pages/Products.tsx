@@ -36,7 +36,6 @@ const Products: React.FC = () => {
   if (loading) return <CircularProgress />;
   if (error) return <p>Error: {error}</p>;
   
-
   return (
     <div>
     
