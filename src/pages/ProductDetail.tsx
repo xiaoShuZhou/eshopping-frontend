@@ -4,14 +4,24 @@ import { getProductDetail, deleteProduct } from '../redux/slices/productSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { getImageUrl } from '../misc/uploadFileService';
 import { addToCart } from '../redux/slices/cartSlice';
+import { Box, Button, Card, CardContent, CardMedia, CircularProgress, Typography, Container } from '@mui/material';
+import { styled } from '@mui/material/styles';
+
+const DetailContainer = styled(Container)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginTop: theme.spacing(5),
+  gap: theme.spacing(2),
+}));
 
 const ProductDetail = () => {
   const { productId } = useParams();
   const dispatch = useAppDispatch();
-  // Select products, cart items, and user role from Redux store
   const { products, loading, error } = useAppSelector((state) => state.product);
   const cartItems = useAppSelector((state) => state.cart.items);
-  const userRole = useAppSelector((state) => state.user.user?.role); // Select user role
+  const userRole = useAppSelector((state) => state.user.user?.role);
 
   const product = products.find(p => p.id === Number(productId));
   const [isInCart, setIsInCart] = useState(false);
@@ -20,7 +30,6 @@ const ProductDetail = () => {
     if (productId) {
       dispatch(getProductDetail(Number(productId)));
     }
-    // Check if product is in the cart
     setIsInCart(cartItems.some(item => item.id === Number(productId)));
   }, [dispatch, productId, cartItems]);
 
@@ -37,30 +46,48 @@ const ProductDetail = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!product) return <div>Product not found!</div>;
+  if (loading) return <CircularProgress />;
+  if (error) return <Typography variant="body1" color="error">Error: {error}</Typography>;
+  if (!product) return <Typography variant="body1">Product not found!</Typography>;
 
   return (
-    <div>
-      <h2>{product.title}</h2>
-      <p>{product.description}</p>
-      <p>${product.price}</p>
-      <p>{product.category.name}</p>
-      <img src={getImageUrl(product.images[0])} alt={product.title} style={{width: '100px', height: '100px'}} />
-      {isInCart ? (
-        <button disabled>Item already added to cart</button>
-      ) : (
-        <button onClick={handleAddToCart}>Add to Cart</button>
-      )}
-      {/* Render Update and Delete buttons only for admin */}
-      {userRole === 'admin' && (
-        <div>
-          <button onClick={handleDeleteProduct}>Delete Product</button>
-          <Link to={`/update-product/${product.id}`}>Update Product</Link>
-        </div>
-      )}
-    </div>
+    <DetailContainer>
+      <Card sx={{ maxWidth: 600 }}>
+        <CardMedia
+          component="img"
+          height="300"
+          image={getImageUrl(product.images[0])}
+          alt={product.title}
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h4" component="div">
+            {product.title}
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            {product.description}
+          </Typography>
+          <Typography variant="h6" color="primary">
+            ${product.price}
+          </Typography>
+          <Typography variant="body2">
+            {product.category.name}
+          </Typography>
+        </CardContent>
+      </Card>
+      <Box>
+        {isInCart ? (
+          <Button variant="contained" disabled>Item already added to cart</Button>
+        ) : (
+          <Button variant="contained" color="primary" onClick={handleAddToCart}>Add to Cart</Button>
+        )}
+        {userRole === 'admin' && (
+          <>
+            <Button variant="outlined" color="error" onClick={handleDeleteProduct} sx={{ ml: 2 }}>Delete Product</Button>
+            <Button variant="outlined" component={Link} to={`/update-product/${product.id}`} sx={{ ml: 2 }}>Update Product</Button>
+          </>
+        )}
+      </Box>
+    </DetailContainer>
   );
 };
 

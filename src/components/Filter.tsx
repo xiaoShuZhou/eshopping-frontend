@@ -1,27 +1,85 @@
 import React, { useState } from 'react';
-import { useAppDispatch } from '../redux/hooks';
-import { getProductsWithFilters } from '../redux/slices/productSlice'; // Adjust the import to your new thunk
-import { TextField, Button, Box } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { getProductsWithFilters } from '../redux/slices/productSlice';
+import { TextField, Button, Box, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 
-const Filter= () => {
+const Filter = () => {
   const [title, setTitle] = useState('');
   const [priceMin, setPriceMin] = useState('');
   const [priceMax, setPriceMax] = useState('');
   const [categoryId, setCategoryId] = useState('');
-
+  const categories = useAppSelector((state) => state.category);
   const dispatch = useAppDispatch();
 
   const handleFilters = () => {
-    dispatch(getProductsWithFilters({ title, priceMin: Number(priceMin), priceMax: Number(priceMax), categoryId: Number(categoryId) }));
+    dispatch(getProductsWithFilters({
+      title,
+      priceMin: Number(priceMin),
+      priceMax: Number(priceMax),
+      categoryId: Number(categoryId),
+    }));
   };
 
+
+
   return (
-    <Box>
-      <TextField label="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
-      <TextField label="Price Min" type="number" value={priceMin} onChange={(e) => setPriceMin(e.target.value)} />
-      <TextField label="Price Max" type="number" value={priceMax} onChange={(e) => setPriceMax(e.target.value)} />
-      <TextField label="Category ID" type="number" value={categoryId} onChange={(e) => setCategoryId(e.target.value)} />
-      <Button onClick={handleFilters}>Apply Filters</Button>
+    <Box sx={{
+      display: 'flex',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      gap: 2,
+      '& .MuiTextField-root, & .MuiButton-root, & .MuiFormControl-root': {
+        borderRadius: '20px',
+      },
+      '& .MuiOutlinedInput-root': {
+        borderRadius: '20px',
+      },
+    }}>
+      <TextField
+        label="Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        size="small"
+        sx={{ flex: 1 }}
+      />
+      <TextField
+        label="Price Min"
+        type="number"
+        value={priceMin}
+        onChange={(e) => setPriceMin(e.target.value)}
+        size="small"
+        sx={{ flex: 1 }}
+      />
+      <TextField
+        label="Price Max"
+        type="number"
+        value={priceMax}
+        onChange={(e) => setPriceMax(e.target.value)}
+        size="small"
+        sx={{ flex: 1 }}
+      />
+      <FormControl size="small" sx={{ flex: 1, minWidth: 120 }}>
+        <InputLabel id="category-select-label">Category</InputLabel>
+        <Select
+          labelId="category-select-label"
+          id="category-select"
+          value={categoryId}
+          label="Category"
+          onChange={(e) => setCategoryId(e.target.value)}
+        >
+          <MenuItem value="">
+            <em>Select a Category</em>
+          </MenuItem>
+          {categories.categories.map((category) => (
+            <MenuItem key={category.id} value={category.id}>
+              {category.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <Button variant="contained" onClick={handleFilters} sx={{ py: 1 }}>
+        Apply Filters
+      </Button>
     </Box>
   );
 };

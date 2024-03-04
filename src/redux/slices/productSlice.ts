@@ -91,6 +91,7 @@ export const updateProduct = createAsyncThunk(
   'product/updateProduct',
   async ({ id, updateData }: { id: number; updateData: UpdatedProduct }, { rejectWithValue }) => {
     try {
+      console.log('updateData', updateData);
       const response = await axios.put(`${BASE_URL}/products/${id}`, updateData);
       return response.data;
     } catch (error) {

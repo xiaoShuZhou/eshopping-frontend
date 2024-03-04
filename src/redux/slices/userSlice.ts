@@ -5,15 +5,16 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const BASE_URL = 'https://api.escuelajs.co/api/v1';
 
+
 // Async thunk for user login
 export const login = createAsyncThunk(
   'user/login',
-  async (credentials: LoginRequest, { rejectWithValue }) => {
+  async (credentials: LoginRequest, { dispatch, rejectWithValue }) => {
     try {
       const response = await axios.post(`${BASE_URL}/auth/login`, credentials);
       const tokens: AuthTokens = response.data
       localStorage.setItem("token", tokens.access_token);
-      
+      dispatch(getProfile(tokens.access_token));
       return response.data;
 
     } catch (error) {
