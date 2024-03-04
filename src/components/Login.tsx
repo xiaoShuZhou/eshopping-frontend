@@ -16,7 +16,6 @@ const Login: React.FC = () => {
     dispatch(login({ email, password }));
     window.alert("Login successfully!");
     navigate('/');
-
   };
 
   return (

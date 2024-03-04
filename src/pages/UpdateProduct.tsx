@@ -5,6 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { getProductDetail, updateProduct } from '../redux/slices/productSlice';
 import { Button, TextField, Typography, Container, Grid } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { uploadImage } from '../misc/uploadFileService';
 import { UpdatedProduct } from '../types/product'
 
@@ -39,10 +40,6 @@ const UpdateProduct: React.FC = () => {
     }
   }, [dispatch, productId, product]);
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setUpdatedProduct({ ...updatedProduct, categoryId: Number(e.target.value) });
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUpdatedProduct({ ...updatedProduct, [e.target.name]: e.target.type === 'number' ? Number(e.target.value) : e.target.value });
   };
@@ -70,7 +67,7 @@ const UpdateProduct: React.FC = () => {
 
   return (
     <Container maxWidth="sm">
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom component="div">
         Update Product
       </Typography>
       <form onSubmit={handleSubmit}>
@@ -80,6 +77,7 @@ const UpdateProduct: React.FC = () => {
               name="title"
               label="Title"
               fullWidth
+              variant="outlined"
               value={updatedProduct.title}
               onChange={handleChange}
             />
@@ -90,6 +88,7 @@ const UpdateProduct: React.FC = () => {
               label="Price"
               type="number"
               fullWidth
+              variant="outlined"
               value={updatedProduct.price}
               onChange={handleChange}
             />
@@ -101,26 +100,40 @@ const UpdateProduct: React.FC = () => {
               multiline
               rows={4}
               fullWidth
+              variant="outlined"
               value={updatedProduct.description}
               onChange={handleChange}
             />
           </Grid>
-          <div>
-          <label>Category:</label>
-          <select name="categoryId" value={updatedProduct.categoryId} onChange={handleCategoryChange} required>
-            <option value="">Select a Category</option>
-            {categories.categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
+          <Grid item xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="category-label">Category</InputLabel>
+              <Select
+                labelId="category-label"
+                id="category"
+                name="categoryId"
+                value={updatedProduct.categoryId}
+                label="Category"
+                onChange={(e) => setUpdatedProduct({ ...updatedProduct, categoryId: Number(e.target.value) })}
+                required
+              >
+                <MenuItem value="">
+                  <em>Select a Category</em>
+                </MenuItem>
+                {categories.categories.map((category) => (
+                  <MenuItem key={category.id} value={category.id}>
+                    {category.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
           <Grid item xs={12}>
             <Button
               component="label"
               variant="contained"
               color="primary"
+              fullWidth
             >
               Upload Image
               <input
@@ -131,7 +144,7 @@ const UpdateProduct: React.FC = () => {
             </Button>
           </Grid>
           <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: '20px' }}>
+            <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
               Update Product
             </Button>
           </Grid>

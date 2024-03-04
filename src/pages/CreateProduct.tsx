@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 import { useAppDispatch } from '../redux/hooks';
 import { createProduct } from '../redux/slices/productSlice';
-import { Button, TextField, Typography, Container, Grid } from '@mui/material';
+import { Button, TextField, Typography, Container, Grid, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import {uploadImage} from '../misc/uploadFileService';
-import {useAppSelector} from '../redux/hooks';
+import { uploadImage } from '../misc/uploadFileService';
+import { useAppSelector } from '../redux/hooks';
 
 const CreateProduct: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -20,10 +20,6 @@ const CreateProduct: React.FC = () => {
   });
   const categories = useAppSelector((state) => state.category);
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setNewProduct({ ...newProduct, categoryId: Number(e.target.value) });
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
   };
@@ -36,7 +32,6 @@ const CreateProduct: React.FC = () => {
         setNewProduct({ ...newProduct, images: [imageUrl] });
       } catch (error) {
         console.error('Error uploading image:', error);
-        // Handle the error, e.g., show an error message
       }
     }
   };
@@ -44,7 +39,6 @@ const CreateProduct: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(createProduct(newProduct));
-    // Reset form and potentially show a success message
     setNewProduct({
       title: '',
       price: 0,
@@ -63,7 +57,6 @@ const CreateProduct: React.FC = () => {
       </Typography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
-          {/* Other fields */}
           <Grid item xs={12}>
             <TextField
               name="title"
@@ -71,6 +64,7 @@ const CreateProduct: React.FC = () => {
               fullWidth
               value={newProduct.title}
               onChange={handleChange}
+              variant="outlined"
             />
           </Grid>
           <Grid item xs={12}>
@@ -81,6 +75,7 @@ const CreateProduct: React.FC = () => {
               fullWidth
               value={newProduct.price}
               onChange={handleChange}
+              variant="outlined"
             />
           </Grid>
           <Grid item xs={12}>
@@ -92,19 +87,30 @@ const CreateProduct: React.FC = () => {
               fullWidth
               value={newProduct.description}
               onChange={handleChange}
+              variant="outlined"
             />
           </Grid>
-          <div>
-          <label>Category:</label>
-          <select name="categoryId" value={newProduct.categoryId} onChange={handleCategoryChange} required>
-            <option value="">Select a Category</option>
-            {categories.categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
+          <Grid item xs={12}>
+            <FormControl fullWidth>
+              <InputLabel>Category</InputLabel>
+              <Select
+                name="categoryId"
+                label = "Category"
+                value={newProduct.categoryId}
+                onChange={(e) =>setNewProduct({ ...newProduct, categoryId: Number(e.target.value) })}
+                required
+                variant="outlined"
+              >
+                <MenuItem value="">
+                </MenuItem>
+                {categories.categories.map((category) => (
+                  <MenuItem key={category.id} value={category.id}>
+                    {category.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
           <Grid item xs={12}>
             <Button
               component="label"
@@ -119,9 +125,11 @@ const CreateProduct: React.FC = () => {
               />
             </Button>
           </Grid>
-          <Button type="submit" variant="contained" color="primary" style={{ marginTop: '20px' }}>
-            Create Product
-          </Button>
+          <Grid item xs={12}>
+            <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: '20px' }}>
+              Create Product
+            </Button>
+          </Grid>
         </Grid>
       </form>
     </Container>
