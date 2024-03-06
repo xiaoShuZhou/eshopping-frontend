@@ -1,7 +1,5 @@
 import { Category } from "../../types/category";
 
-
-
 export const fakeCategory: Category[] = [
   {
       "id": 1,
