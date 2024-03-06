@@ -1,50 +1,168 @@
-# Frontend project
+# FRONTEND PROJECT
+# E-commerce Website Project
 
-This repository for the Frontend project to build an e-commerce website.
+## 1. Introduction
 
-## Requirements
+The website live here: https://eshopping-website-iota.vercel.app/
 
-### Basic requirements
+All features achieved:
+1. Product: get all products, find a single products, search products by name, filter products by categories, sort products by price. Create, update and delete a product (enable update & delete features only for admin of the webapp)
+2. User: register and login
+3. Shopping cart: add product to cart, remove products, update products's quantity in cart
+4. Context API to switch theme
+5. Applying pagination when fetching/displaying all the products
+6. Styling:  responsive
 
-The Front end project must use TypeScript and Redux toolkit.
+This e-commerce website project aims to provide a seamless shopping experience, featuring a simple yet comprehensive interface with pages for product listings, individual product details, user profiles, and shopping carts. It leverages Redux for efficient state management across product browsing, user authentication, and cart functionalities, including filtering, sorting, and admin-specific operations. Enhanced by theme switching, pagination, and performance optimization, the site ensures an engaging, accessible, and smooth experience for all users. Private routing, responsive design, and unit testing further enhance security and usability, making it a versatile solution for online shopping needs.
 
-1. Use the API endpoint `https://fakeapi.platzi.com/`.
+### Technology Stack
+- **React** for framework
+- **Redux Toolkit** for state management
+- **React Router** for router management
+- **Typescript** for programming language
+- **Material UI** for styling
+- **Jest and msw** for testing
 
-2. Create at lease 4 pages (can be more if you want): Page for all products, product page, profile page (only available if user logins), and cart page (cart page could be a page or a modal)
+## 2. Table of Contents
 
-3. Create Redux store for following features:
+- [Introduction](#1-introduction)
+- [Table of Contents](#2-table-of-contents)
+- [Getting Started](#3-getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Running the Project](#running-the-project)
+- [Usage](#4-usage)
+- [Architecture & Design](#5-architecture--design)
+  - [Project Structure](#project-structure)
+  - [Data Flow](#data-flow)
+  - [Redux structure](#redux-structure)
+ - [Deployment](#6-deployment)
 
-   - product reducer: get all products, find a single products, filter products by categories, sort products by price. Create, update and delete a product (enable update & delete features only for admin of the webapp)
-   - user reducer: register and login
-   - cart reducer: add product to cart, remove products, update products's quantity in cart
+## 3. Getting Started
 
-4. When adding routers to your application, set certain routes to be private. For example, route to user profile page should not be accessible if user has not logged in.
+### Prerequisites
 
-5. Styling: must have responsive
+Before you begin, ensure you have the following software and tools installed on your system:
 
-6. Implement unit testing for the reducers
+- **Node.js**: Version 16.18.80 or newer.
 
-7. **Deploy** the application and rewrite README file.
+### Installation
 
-### Additional features:
+To get started with the project, the first step is to clone the repository to your local machine. Open your terminal and run the following git command:
 
-- Use Context API to switch theme
-- Use pagination when fetching/displaying all the products
-- Implement performance optimization where applicable
+```bash
+git clone https://github.com/xiaoShuZhou/fs17-Frontend-project.git
+```
+After cloning the project, navigate to the project directory and install the required dependencies by running:
+```bash
+npm install
+```
+Running the Project
+```bash
+npm start
+```
+## 4. Usage
+### Production build
+This script compiles the app into static files for production in the build folder.
+```bash
+npm build
+```
+### Test 
+```bash
+npm test
+```
 
-## Grading (1-5)
+This script compiles the app into static files for production in the build folder.
+### Features
+1. Product: get all products, find a single products, search products by name, filter products by categories, sort products by price. Create, update and delete a product (enable update & delete features only for admin of the webapp)
+![Products](readmePictures/Products.png "Products Diagram")
+![createProduct](readmePictures/createProduct.png "createProduct Diagram")
+![update](readmePictures/update.png "update Diagram")
+![ProductDetail](readmePictures/ProductDetail.png "ProductDetail Diagram")
+2. User: register and login
+![Register](readmePictures/Register.png "Register")
+![Signin](readmePictures/Signin.png "Signin")
+3. Shopping cart: add product to cart, remove products, update products's quantity in cart
+![cart](readmePictures/cart.png "cart")
+## 5. Architecture & Design
 
-1: Late submission or not complete basic requirements
+### Project Structure
+- **src**
+  - **components**
+    - `Filter.tsx`
+    - `Header.tsx`
+    - `Login.tsx`
+    - `Pagination.tsx`
+    - `Register.tsx`
+    - `ThemeContext.tsx`
+    - `ThemeToggleButton.tsx`
+  - **misc**
+    - `constants.ts`
+    - `uploadFileService.ts`
+  - **pages**
+    - `Auth.tsx`
+    - `Cart.tsx`
+    - `CreateProduct.tsx`
+    - `ProductDetail.tsx`
+    - `Products.tsx`
+    - `Profile.tsx`
+    - `UpdateProduct.tsx`
+  - **redux**
+    - **slices**
+      - `cartSlice.ts`
+      - `categorySlice.ts`
+      - `productSlice.ts`
+      - `userSlice.ts`
+     - `store.ts`
+    - `hooks.ts`
+  - **test**
+    - **cart**
+      - `cartReducer.test.ts`
+    - **category**
+      - `categoryReducer.test.ts`
+    - **product**
+      - `productReducer.test.ts`
+    - **mockdata**
+      - `cart.ts`
+      - `category.ts`
+      - `product.ts`
+      - `user.ts`
 
-2: Basic requirement + Presentation
+    - **testServer**
+      - `categoryServer.ts`
+      - `productServer.ts`
+      - `userServer.ts`
+    - **user**
+      - `userReducer.test.ts`
+   - **types**
+      - `cart.ts`
+      - `category.ts`
+      - `product.ts`
+      - `user.ts`
+  
+    - `App.test.tsx`
+    - `App.tsx`
+    - `index.tsx`
+    - `react-app-env.d.ts`
+    - `reportWebVitals.ts`
+    - `setupTests.ts`
+- `package.json`
 
-3: Folder structure + follow convention(naming convention ,loading, error) + some additional features
+    -   **src**: The source code for the application.
+    -   **components**: Reusable React components.
+    -   **misc**: Utility folder for miscellaneous items.
+    -   **pages**: Components that represent whole pages or routes.
+    -   **redux**: Contains the state management files used by Redux.
+        -   **slices**: State and reducers for specific features.
+        -   **hooks.ts**: Custom hooks for accessing the state and dispatching actions.
+    -   **test**: Testing files related to Redux Reducer logic.
+    -   **types**: TypeScript type definitions and interfaces.
 
-4: All additional features + reusable logic + custom hook
+The **App.tsx** file is the root React component, and **index.tsx** is the entry point of the React app.
 
-5: UI-UX (for example: send alert when user add same product) + styling (animation or transition, scroll to top) + advanced feature (google log in)
-
-## Deadline
-
-- Presentation: **7/3** and **8/3/ 2024**
-- Submitting Front-end project **10am 8/3/2024**
+### Data Flow
+![Data Flow](readmePictures/dataflow.png "Data Flow Diagram")
+### Redux structure
+![Redux structure](readmePictures/structure.png "Redux structure Diagram")
+## 6. Deployment
+The website is deployed with Vercel. I choose Vercel because it provides a set of CI/CD pipelines so it can redeploy my project in real time when I change my github repo.
