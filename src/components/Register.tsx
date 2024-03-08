@@ -27,9 +27,14 @@ const Register: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    try {
     dispatch(register({ email, password, name, avatar }));
     window.alert("Register successfully!");
     navigate('/');
+    }
+    catch (error) {
+      window.alert("Register failed!");
+    }
   };
 
   return (

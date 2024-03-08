@@ -13,9 +13,14 @@ const Login: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    try {
     dispatch(login({ email, password }));
     window.alert("Login successfully!");
     navigate('/');
+    }
+    catch (error) {
+      window.alert("Login failed!");
+    }
   };
 
   return (
