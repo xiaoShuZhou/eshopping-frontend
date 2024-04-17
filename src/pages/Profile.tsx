@@ -37,13 +37,20 @@ const Profile: React.FC = () => {
         <Card sx={{ maxWidth: 345, margin: 'auto', mt: 5 }}>
             <CardContent>
                 <Avatar
-                    alt={user?.name || 'User'}
+                    alt={user?.userName || 'User'}
                     src={user?.avatar || ''}
                     sx={{ width: 56, height: 56, mb: 2, margin: 'auto' }}
                 />
                 <Typography gutterBottom variant="h5" component="div">
-                    {user?.name || 'N/A'}
+                    {user?.userName || 'N/A'}
                 </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    Name: {user?.firstName || 'N/A'} {user?.lastName || 'N/A'}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    Name: {user?.firstName || 'N/A'} {user?.lastName || 'N/A'}
+                </Typography>
+                
                 <Typography variant="body2" color="text.secondary">
                     Email: {user?.email || 'N/A'}
                 </Typography>

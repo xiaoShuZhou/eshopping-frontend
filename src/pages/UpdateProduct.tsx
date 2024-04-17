@@ -15,33 +15,33 @@ const UpdateProduct: React.FC = () => {
   const navigate = useNavigate();
   const categories = useAppSelector((state) => state.category);
   const product = useAppSelector((state) =>
-    state.product.products.find((p) => p.id === Number(productId))
+    state.product.products.find((p) => p.id === productId)
   );
 
   const [updatedProduct, setUpdatedProduct] = useState<UpdatedProduct>({
     title: '',
     price: 0,
     description: '',
-    categoryId: 0,
-    images: [],
+    categoryId: '',
+    image: '',
   });
 
   useEffect(() => {
-    if (product) {
+    if (productId && product) {
       setUpdatedProduct({
         title: product.title,
         price: product.price,
         description: product.description,
         categoryId: product.category.id,
-        images: product.images,
+        image: product.image,
       });
-    } else {
-      dispatch(getProductDetail(Number(productId)));
+    } else if (productId){
+      dispatch(getProductDetail(productId));
     }
   }, [dispatch, productId, product]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUpdatedProduct({ ...updatedProduct, [e.target.name]: e.target.type === 'number' ? Number(e.target.value) : e.target.value });
+    setUpdatedProduct({ ...updatedProduct, [e.target.name]: e.target.type === 'number' ? e.target.value : e.target.value });
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +49,7 @@ const UpdateProduct: React.FC = () => {
     if (files && files[0]) {
       try {
         const imageUrl = await uploadImage(files[0]);
-        setUpdatedProduct({ ...updatedProduct, images: [imageUrl] }); 
+        setUpdatedProduct({ ...updatedProduct, image: imageUrl }); 
       } catch (error) {
         console.error('Error uploading image:', error);
       }
@@ -58,9 +58,13 @@ const UpdateProduct: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(updateProduct({ id: Number(productId), updateData: updatedProduct }));
-    alert('Product updated successfully!');
-    navigate(`/product/${productId}`);
+    if (productId) {
+      dispatch(updateProduct({ id: productId, updateData: updatedProduct }));
+      alert('Product updated successfully!');
+      navigate(`/product/${productId}`);
+    } else {
+      alert('Invalid product ID');
+    }
   };
 
   if (!product) return <div>Loading...</div>;
@@ -114,7 +118,7 @@ const UpdateProduct: React.FC = () => {
                 name="categoryId"
                 value={updatedProduct.categoryId}
                 label="Category"
-                onChange={(e) => setUpdatedProduct({ ...updatedProduct, categoryId: Number(e.target.value) })}
+                onChange={(e) => setUpdatedProduct({ ...updatedProduct, categoryId: e.target.value })}
                 required
               >
                 <MenuItem value="">

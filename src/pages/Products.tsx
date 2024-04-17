@@ -4,7 +4,7 @@ import { getProducts } from '../redux/slices/productSlice';
 import { getCategories } from '../redux/slices/categorySlice';
 import { Box, Card, CardActions, CardContent, CardMedia, CircularProgress, Container, Grid, Typography, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { getImageUrl } from '../misc/uploadFileService';
+
 import Filter from '../components/Filter';
 import Pagination from '../components/Pagination';
 
@@ -42,7 +42,7 @@ const Products: React.FC = () => {
                     <CardMedia
                       component="img"
                       sx={{ height: 200, objectFit: 'cover' }}
-                      image={getImageUrl(product.images[0])}
+                      image={product.image}
                       alt={product.title}
                     />
                     <CardContent>

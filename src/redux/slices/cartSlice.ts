@@ -14,19 +14,19 @@ export const cartSlice = createSlice({
       const { item } = action.payload;
       state.items.push({ ...item, quantity: item.quantity });
     },
-    removeFromCart: (state, action: PayloadAction<number>) => {
+    removeFromCart: (state, action: PayloadAction<string>) => {
       const itemIndex = state.items.findIndex((item) => item.id === action.payload);
       if (itemIndex !== -1) {
         state.items.splice(itemIndex, 1);
       }
     },
-    increaseQuantity: (state, action: PayloadAction<number>) => {
+    increaseQuantity: (state, action: PayloadAction<string>) => {
       const item = state.items.find((item) => item.id === action.payload);
       if (item) {
         item.quantity++;
       }
     },
-    decreaseQuantity: (state, action: PayloadAction<number>) => {
+    decreaseQuantity: (state, action: PayloadAction<string>) => {
       const item = state.items.find((item) => item.id === action.payload);
       if (item && item.quantity > 1) {
         item.quantity--;

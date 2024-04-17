@@ -6,21 +6,21 @@ import { Button, Grid, Card, CardContent, Typography, CardActions, IconButton, B
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { getImageUrl } from '../misc/uploadFileService';
+
 
 const Cart: React.FC = () => {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state: RootState) => state.cart.items);
 
-  const handleRemoveFromCart = (id: number) => {
+  const handleRemoveFromCart = (id: string) => {
     dispatch(removeFromCart(id));
   };
 
-  const handleIncreaseQuantity = (id: number) => {
+  const handleIncreaseQuantity = (id: string) => {
     dispatch(increaseQuantity(id));
   };
 
-  const handleDecreaseQuantity = (id: number) => {
+  const handleDecreaseQuantity = (id: string) => {
     dispatch(decreaseQuantity(id));
   };
 
@@ -47,7 +47,7 @@ const Cart: React.FC = () => {
                     ${item.price} x {item.quantity}
                   </Typography>
                   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '10px' }}>
-                    <img src={getImageUrl(item.images[0])} alt={item.title} style={{ width: '100%', height: 'auto', maxWidth: '100px', maxHeight: '100px' }} />
+                    <img src={item.image} alt={item.title} style={{ width: '100%', height: 'auto', maxWidth: '100px', maxHeight: '100px' }} />
                   </Box>
                 </CardContent>
                 <CardActions>

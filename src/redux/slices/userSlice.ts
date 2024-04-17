@@ -2,8 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { UserState, LoginRequest, RegisterRequest,AuthTokens } from '../../types/user';
 import { createSlice } from '@reduxjs/toolkit';
+import { BASE_URL } from '../../misc/constants';
 
-const BASE_URL = 'https://api.escuelajs.co/api/v1';
 
 
 // Async thunk for user login
@@ -11,10 +11,12 @@ export const login = createAsyncThunk(
   'user/login',
   async (credentials: LoginRequest, { dispatch, rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/auth/login`, credentials);
-      const tokens: AuthTokens = response.data
-      localStorage.setItem("token", tokens.access_token);
-      dispatch(getProfile(tokens.access_token));
+      const response = await axios.post(`${BASE_URL}/users/login`, credentials);
+      const token= response.data
+      console.log(token)
+      localStorage.setItem("token", token);
+      console.log(token)
+      dispatch(getProfile(token));
       return response.data;
 
     } catch (error) {
@@ -29,7 +31,9 @@ export const register = createAsyncThunk(
   'user/register',
   async (userData: RegisterRequest, { rejectWithValue }) => {
     try {
+      console.log (userData, "userData")
       const response = await axios.post(`${BASE_URL}/users`, userData);
+      console.log(response.data, "response.data")
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
@@ -43,7 +47,7 @@ export const getProfile = createAsyncThunk(
   'user/getProfile',
   async (token: string, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BASE_URL}/auth/profile`, {
+      const response = await axios.post(`${BASE_URL}/users/profile`, {}, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -55,6 +59,7 @@ export const getProfile = createAsyncThunk(
     }
   }
 );
+
 
 const initialState: UserState = {
   user: null,

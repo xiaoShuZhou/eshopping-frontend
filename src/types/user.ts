@@ -1,8 +1,10 @@
 export type User = {
-  id?: number;
+  id?: string;
   email: string;
   password: string;
-  name?: string;
+  firstName: string;
+  lastName: string;
+  userName?: string;
   role?: string;
   avatar?: string;
   creationAt?: string;
@@ -22,11 +24,13 @@ export type LoginRequest = {
 };
 
 export type RegisterRequest = LoginRequest & {
-  name: string;
-  avatar?: string;
+  userName: string;
+  firstName: string;
+  lastName: string;
+  avatar: string;
 };
 
 export type AuthTokens = {
-  access_token: string;
-  refresh_token: string;
+  token: string;
+  refresh_token?: string;
 };

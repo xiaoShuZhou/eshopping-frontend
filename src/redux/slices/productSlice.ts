@@ -32,7 +32,7 @@ export const getProducts = createAsyncThunk(
 
 export const getProductDetail = createAsyncThunk(
   'product/fetchProductDetail',
-  async (productId: number, { rejectWithValue }) => {
+  async (productId: string, { rejectWithValue }) => {
     try {
       const response = await axios.get(BASE_URL + `/products/${productId}`);
       return response.data;
@@ -49,7 +49,7 @@ export const getProductDetail = createAsyncThunk(
 
 export const deleteProduct = createAsyncThunk(
   'product/deleteProduct',
-  async (productId: number, { rejectWithValue }) => {
+  async (productId: string, { rejectWithValue }) => {
     try {
       const response = await axios.delete(`https://api.escuelajs.co/api/v1/products/${productId}`);
       if (response.data === true) {
@@ -89,9 +89,8 @@ export const createProduct = createAsyncThunk(
 
 export const updateProduct = createAsyncThunk(
   'product/updateProduct',
-  async ({ id, updateData }: { id: number; updateData: UpdatedProduct }, { rejectWithValue }) => {
+  async ({ id, updateData }: { id: string; updateData: UpdatedProduct }, { rejectWithValue }) => {
     try {
-      console.log('updateData', updateData);
       const response = await axios.put(`${BASE_URL}/products/${id}`, updateData);
       return response.data;
     } catch (error) {

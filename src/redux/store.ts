@@ -12,7 +12,7 @@ export const store = configureStore({
     category: categoryReducer
   },
 });
-console.log(store.getState())
+// console.log(store.getState())
 
 export const testStore = () => {
   return configureStore({

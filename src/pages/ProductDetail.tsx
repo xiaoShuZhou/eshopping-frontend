@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getProductDetail, deleteProduct } from '../redux/slices/productSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { getImageUrl } from '../misc/uploadFileService';
 import { addToCart } from '../redux/slices/cartSlice';
 import { Box, Button, Card, CardContent, CardMedia, CircularProgress, Typography, Container } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -23,14 +22,14 @@ const ProductDetail = () => {
   const cartItems = useAppSelector((state) => state.cart.items);
   const userRole = useAppSelector((state) => state.user.user?.role);
 
-  const product = products.find(p => p.id === Number(productId));
+  const product = products.find(p => p.id === productId);
   const [isInCart, setIsInCart] = useState(false);
 
   useEffect(() => {
     if (productId) {
-      dispatch(getProductDetail(Number(productId)));
+      dispatch(getProductDetail(productId));
     }
-    setIsInCart(cartItems.some(item => item.id === Number(productId)));
+    setIsInCart(cartItems.some(item => item.id === productId));
   }, [dispatch, productId, cartItems]);
 
   const handleAddToCart = () => {
@@ -41,8 +40,8 @@ const ProductDetail = () => {
   };
 
   const handleDeleteProduct = () => {
-    if (product && window.confirm('Are you sure you want to delete this product?')) {
-      dispatch(deleteProduct(Number(productId)));
+    if (product && productId && window.confirm('Are you sure you want to delete this product?')) {
+      dispatch(deleteProduct(productId));
     }
   };
 
@@ -56,7 +55,7 @@ const ProductDetail = () => {
         <CardMedia
           component="img"
           height="300"
-          image={getImageUrl(product.images[0])}
+          image={product.image}
           alt={product.title}
         />
         <CardContent>

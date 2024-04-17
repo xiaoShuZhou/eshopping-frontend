@@ -1,5 +1,3 @@
-// CreateProduct.tsx
-
 import React, { useState } from 'react';
 import { useAppDispatch } from '../redux/hooks';
 import { createProduct } from '../redux/slices/productSlice';
@@ -15,8 +13,8 @@ const CreateProduct: React.FC = () => {
     title: '',
     price: 0,
     description: '',
-    categoryId: 0, // Adjust based on your category structure
-    images: ['https://example.com/default-image.jpg'], // Default image URL
+    categoryId: '', // Adjust based on your category structure
+    image: 'https://example.com/default-image.jpg', // Default image URL
   });
   const categories = useAppSelector((state) => state.category);
 
@@ -29,7 +27,7 @@ const CreateProduct: React.FC = () => {
     if (files && files[0]) {
       try {
         const imageUrl = await uploadImage(files[0]);
-        setNewProduct({ ...newProduct, images: [imageUrl] });
+        setNewProduct({ ...newProduct, image: imageUrl });
       } catch (error) {
         console.error('Error uploading image:', error);
       }
@@ -43,8 +41,8 @@ const CreateProduct: React.FC = () => {
       title: '',
       price: 0,
       description: '',
-      categoryId: 0,
-      images: ['https://example.com/default-image.jpg'],
+      categoryId: '',
+      image: 'https://example.com/default-image.jpg',
     });
     window.alert("Product posted successfully!");
     navigate('/');
@@ -97,7 +95,7 @@ const CreateProduct: React.FC = () => {
                 name="categoryId"
                 label = "Category"
                 value={newProduct.categoryId}
-                onChange={(e) =>setNewProduct({ ...newProduct, categoryId: Number(e.target.value) })}
+                onChange={(e) =>setNewProduct({ ...newProduct, categoryId: e.target.value })}
                 required
                 variant="outlined"
               >

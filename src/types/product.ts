@@ -3,15 +3,16 @@ import { Category } from "./category";
 
 // All types are defined based on the API required format
 export type Product = {
-  id: number;
+  id: string;
   title: string;
   price: number;
   description: string;
-  images: string[];
+  image: string;
   category: Category;
   creationAt?: string;
   updatedAt?: string;
 };
+
 
 export type ProductState = {
   products: Product[];
@@ -24,16 +25,16 @@ export type NewProduct = {
   title: string;
   price: number;
   description: string;
-  categoryId: number;
-  images: string[];
+  categoryId: string;
+  image: string;
 };
 
 export type UpdatedProduct = {
   title?: string;
   price?: number;
   description?: string;
-  categoryId?: number;
-  images?: string[];
+  categoryId?: string;
+  image?: string;
 };
 
 

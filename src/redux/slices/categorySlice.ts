@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { CategoryState } from '../../types/category';
+import { BASE_URL } from '../../misc/constants';
 
-const BASE_URL = 'https://api.escuelajs.co/api/v1';
+
 
 // Define the initial state
 const initialState: CategoryState = {

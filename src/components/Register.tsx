@@ -9,15 +9,19 @@ const Register: React.FC = () => {
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [avatar, setAvatar] = useState('');
+  const [userName, setUserName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [avatar, setAvatar] = useState('')
   const navigate = useNavigate();
   
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files[0]) {
       try {
-        const imageUrl = await uploadImage(files[0]);
+        const file = files[0];
+        const imageUrl = await uploadImage(file);
+        console.log(imageUrl, 'imageUrl');
         setAvatar(imageUrl);
       } catch (error) {
         console.error('Error uploading image:', error);
@@ -28,7 +32,7 @@ const Register: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-    dispatch(register({ email, password, name, avatar }));
+    dispatch(register({ email, password, firstName, lastName, userName, avatar }));
     window.alert("Register successfully!");
     navigate('/');
     }
@@ -46,10 +50,28 @@ const Register: React.FC = () => {
         margin="normal"
         required
         fullWidth
-        label="Name"
-        name="name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        label="userName"
+        name="userName"
+        value={userName}
+        onChange={(e) => setUserName(e.target.value)}
+      />
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        label="First Name"
+        name="firstName"
+        value={firstName}
+        onChange={(e) => setFirstName(e.target.value)}
+      />
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        label="Last Name"
+        name="lastName"
+        value={lastName}
+        onChange={(e) => setLastName(e.target.value)}
       />
       <TextField
         margin="normal"
