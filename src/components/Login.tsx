@@ -13,14 +13,21 @@ const Login: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-    dispatch(login({ email, password }));
-    window.alert("Login successfully!");
-    navigate('/');
+    if (!email || !password) {
+      window.alert('Please fill in all inputs to login.');
+      return;
     }
-    catch (error) {
-      window.alert("Login failed!");
-    }
+    // Dispatching the login action and handling the promise
+    dispatch(login({ email, password }))
+      .unwrap()
+      .then(() => {
+        window.alert("Login successfully!");
+        navigate('/');
+      })
+      .catch((error) => {
+        console.error('Login failed:', error);
+        window.alert("Login failed！please check your email and password.");
+      });
   };
 
   return (

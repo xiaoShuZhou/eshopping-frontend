@@ -13,9 +13,10 @@ const CreateProduct: React.FC = () => {
     title: '',
     price: 0,
     description: '',
-    categoryId: '', // Adjust based on your category structure
+    category: '', // Adjust based on your category structure
     image: 'https://example.com/default-image.jpg', // Default image URL
   });
+
   const categories = useAppSelector((state) => state.category);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,7 +27,8 @@ const CreateProduct: React.FC = () => {
     const files = e.target.files;
     if (files && files[0]) {
       try {
-        const imageUrl = await uploadImage(files[0]);
+        const file = files[0];
+        const imageUrl = await uploadImage(file);
         setNewProduct({ ...newProduct, image: imageUrl });
       } catch (error) {
         console.error('Error uploading image:', error);
@@ -36,12 +38,17 @@ const CreateProduct: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!newProduct.title || !newProduct.price || !newProduct.description || !newProduct.category || !newProduct.image) {
+      window.alert('Please fill in all fields before creating a product.');
+      return;
+    }
+    console.log('Creating product:', newProduct);
     dispatch(createProduct(newProduct));
     setNewProduct({
       title: '',
       price: 0,
       description: '',
-      categoryId: '',
+      category: '',
       image: 'https://example.com/default-image.jpg',
     });
     window.alert("Product posted successfully!");
@@ -94,8 +101,8 @@ const CreateProduct: React.FC = () => {
               <Select
                 name="categoryId"
                 label = "Category"
-                value={newProduct.categoryId}
-                onChange={(e) =>setNewProduct({ ...newProduct, categoryId: e.target.value })}
+                value={newProduct.category}
+                onChange={(e) =>setNewProduct({ ...newProduct, category: e.target.value })}
                 required
                 variant="outlined"
               >

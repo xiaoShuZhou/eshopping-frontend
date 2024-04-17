@@ -31,14 +31,23 @@ const Register: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-    dispatch(register({ email, password, firstName, lastName, userName, avatar }));
-    window.alert("Register successfully!");
-    navigate('/');
+    // Check if all required fields are filled
+    if (!email || !password || !userName || !firstName || !lastName || !avatar) {
+      window.alert('Please fill in all fields before registering.');
+      return;
     }
-    catch (error) {
-      window.alert("Register failed!");
-    }
+  
+    // Dispatching the register action and handling the promise
+    dispatch(register({ email, password, firstName, lastName, userName, avatar }))
+      .unwrap()
+      .then(() => {
+        window.alert("Register successfully!");
+        navigate('/');
+      })
+      .catch((error) => {
+        console.error('Register failed!', error);
+        window.alert("Register failed: please change your email and userName");
+      });
   };
 
   return (
