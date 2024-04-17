@@ -25,7 +25,6 @@ const Login: React.FC = () => {
         navigate('/');
       })
       .catch((error) => {
-        console.error('Login failed:', error);
         window.alert("Login failed！please check your email and password.");
       });
   };

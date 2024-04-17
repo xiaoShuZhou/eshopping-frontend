@@ -1,5 +1,5 @@
 export type User = {
-  id?: string;
+  id: string;
   email: string;
   password: string;
   firstName: string;
@@ -9,6 +9,14 @@ export type User = {
   avatar?: string;
   creationAt?: string;
   updatedAt?: string;
+};
+
+export type UpdatedUser = {
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  userName?: string;
+  avatar?: string;
 };
 
 export type UserState = {

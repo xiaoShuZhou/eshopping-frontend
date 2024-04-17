@@ -1,9 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
-import { UserState, LoginRequest, RegisterRequest,AuthTokens } from '../../types/user';
+import { UserState, LoginRequest, RegisterRequest,AuthTokens, UpdatedUser } from '../../types/user';
 import { createSlice } from '@reduxjs/toolkit';
 import { BASE_URL } from '../../misc/constants';
-
 
 
 // Async thunk for user login
@@ -13,9 +12,7 @@ export const login = createAsyncThunk(
     try {
       const response = await axios.post(`${BASE_URL}/users/login`, credentials);
       const token= response.data
-      console.log(token)
       localStorage.setItem("token", token);
-      console.log(token)
       dispatch(getProfile(token));
       return response.data;
 
@@ -58,6 +55,18 @@ export const getProfile = createAsyncThunk(
   }
 );
 
+export const updateProfile = createAsyncThunk(
+  'user/updateProfile',
+  async ({ id, updatedUser }: { id: string; updatedUser: UpdatedUser }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${BASE_URL}/users/${id}`, updatedUser);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      return rejectWithValue(err.response?.data || 'Failed to update profile');
+    }
+  }
+);
 
 const initialState: UserState = {
   user: null,
@@ -118,7 +127,21 @@ const userSlice = createSlice({
       .addCase(getProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      // Handle updateProfile
+      .addCase(updateProfile.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
+
   },
 });
 

@@ -22,7 +22,7 @@ const UpdateProduct: React.FC = () => {
     title: '',
     price: 0,
     description: '',
-    categoryId: '',
+    category: '',
     image: '',
   });
 
@@ -32,7 +32,7 @@ const UpdateProduct: React.FC = () => {
         title: product.title,
         price: product.price,
         description: product.description,
-        categoryId: product.category.id,
+        category: product.category.name,
         image: product.image,
       });
     } else if (productId){
@@ -48,8 +48,9 @@ const UpdateProduct: React.FC = () => {
     const files = e.target.files;
     if (files && files[0]) {
       try {
-        const imageUrl = await uploadImage(files[0]);
-        setUpdatedProduct({ ...updatedProduct, image: imageUrl }); 
+        const file = files[0];
+        const imageUrl = await uploadImage(file);
+        setUpdatedProduct({ ...updatedProduct, image: imageUrl });
       } catch (error) {
         console.error('Error uploading image:', error);
       }
@@ -59,11 +60,14 @@ const UpdateProduct: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (productId) {
-      dispatch(updateProduct({ id: productId, updateData: updatedProduct }));
+      dispatch(updateProduct({ id: productId, updateData: updatedProduct })).unwrap().then(() => {
       alert('Product updated successfully!');
       navigate(`/product/${productId}`);
-    } else {
-      alert('Invalid product ID');
+    }
+    ).catch((error) => {
+      console.error('Update product failed:', error);
+      alert('Update product failed!');
+    });
     }
   };
 
@@ -115,10 +119,10 @@ const UpdateProduct: React.FC = () => {
               <Select
                 labelId="category-label"
                 id="category"
-                name="categoryId"
-                value={updatedProduct.categoryId}
+                name="category"
+                value={updatedProduct.category}
                 label="Category"
-                onChange={(e) => setUpdatedProduct({ ...updatedProduct, categoryId: e.target.value })}
+                onChange={(e) => setUpdatedProduct({ ...updatedProduct, category: e.target.value })}
                 required
               >
                 <MenuItem value="">

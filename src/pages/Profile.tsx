@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { getProfile, logout } from '../redux/slices/userSlice';
 import { Card, CardContent, Typography, Avatar, Button } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const Profile: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -48,10 +49,6 @@ const Profile: React.FC = () => {
                     Name: {user?.firstName || 'N/A'} {user?.lastName || 'N/A'}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    Name: {user?.firstName || 'N/A'} {user?.lastName || 'N/A'}
-                </Typography>
-                
-                <Typography variant="body2" color="text.secondary">
                     Email: {user?.email || 'N/A'}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
@@ -64,6 +61,15 @@ const Profile: React.FC = () => {
                     onClick={handleLogout}
                 >
                     Logout
+                </Button>
+                <Button 
+                    variant="contained" 
+                    color="secondary" 
+                    sx={{ mt: 2, ml: 2}} 
+                    component={Link}
+                    to={`/update-profile/${user.id}`}
+                >
+                    Update Profile
                 </Button>
             </CardContent>
         </Card>

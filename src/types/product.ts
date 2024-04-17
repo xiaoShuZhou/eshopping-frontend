@@ -33,7 +33,7 @@ export type UpdatedProduct = {
   title?: string;
   price?: number;
   description?: string;
-  categoryId?: string;
+  category?: string;
   image?: string;
 };
 

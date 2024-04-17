@@ -43,16 +43,22 @@ const CreateProduct: React.FC = () => {
       return;
     }
     console.log('Creating product:', newProduct);
-    dispatch(createProduct(newProduct));
-    setNewProduct({
-      title: '',
-      price: 0,
-      description: '',
-      category: '',
-      image: 'https://example.com/default-image.jpg',
+    dispatch(createProduct(newProduct)).unwrap().then(() => {
+      setNewProduct({
+        title: '',
+        price: 0,
+        description: '',
+        category: '',
+        image: 'https://example.com/default-image.jpg',
+      });
+      window.alert("Product posted successfully!");
+      navigate('/');
+    }
+    ).catch((error) => {
+      console.error('Create product failed:', error);
+      window.alert("Create product failed!");
     });
-    window.alert("Product posted successfully!");
-    navigate('/');
+
   };
 
   return (
