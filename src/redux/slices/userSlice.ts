@@ -68,6 +68,7 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
+
 const initialState: UserState = {
   user: null,
   loading: false,
@@ -141,7 +142,6 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       });
-
   },
 });
 

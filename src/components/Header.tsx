@@ -21,7 +21,6 @@ const Header = () => {
   const cartItems = useAppSelector((state) => state.cart.items);
   const user = useAppSelector((state) => state.user.user);
   const userRole = useAppSelector((state) => state.user.user?.role);
-  
 
   return (
     <AppBar position="static">
@@ -36,9 +35,14 @@ const Header = () => {
           </Grid>
           <Grid item xs={6} sm={8} md={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             {userRole === 'admin' && (
-              <Button color="inherit" component={RouterLink} to="/post">
-                Post
-              </Button>
+              <>
+                <Button color="inherit" component={RouterLink} to="/post">
+                  Blog
+                </Button>
+                <Button color="inherit" component={RouterLink} to="/manage-categories">
+                  Categories
+                </Button>
+              </>
             )}
             <Button color="inherit" component={RouterLink} to={user ? '/profile' : '/auth'}>
               {user ? 'Profile' : 'Login'}

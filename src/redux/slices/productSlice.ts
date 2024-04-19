@@ -51,7 +51,7 @@ export const deleteProduct = createAsyncThunk(
   'product/deleteProduct',
   async (productId: string, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`https://api.escuelajs.co/api/v1/products/${productId}`);
+      const response = await axios.delete(BASE_URL + `/products/${productId}`);
       if (response.data === true) {
         return productId;
       } else {

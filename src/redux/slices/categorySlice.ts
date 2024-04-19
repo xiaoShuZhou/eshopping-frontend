@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { CategoryState } from '../../types/category';
 import { BASE_URL } from '../../misc/constants';
+import { stat } from 'fs';
 
 
 
@@ -30,6 +31,45 @@ export const getCategories = createAsyncThunk(
   }
 );
 
+export const createCategory = createAsyncThunk(
+  'category/createCategory',
+  async (category: { name: string }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/categories`, category);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      if (err.response) {
+        return rejectWithValue(err.response.data);
+      } else {
+        return rejectWithValue('An unexpected error occurred creating category');
+      }
+    }
+  }
+);
+
+export const deleteCategory = createAsyncThunk(
+  'category/deleteCategory',
+  async (categoryId: string, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(`${BASE_URL}/categories/${categoryId}`);
+      console.log(response.data,'response');
+      if (response.status === 204) {
+        return categoryId;
+      } else {
+        return rejectWithValue('Failed to delete the category');
+      }
+    } catch (error) {
+      const err = error as AxiosError;
+      if (err.response) {
+        return rejectWithValue(err.response.data);
+      } else {
+        return rejectWithValue('An unexpected error occurred deleting category');
+      }
+    }
+  }
+);
+
 
 
 // Create the slice
@@ -49,6 +89,27 @@ const categorySlice = createSlice({
       state.loading = false;
       state.error = action.error.message || 'Something went wrong fetching categories';
     });
+
+    builder.addCase(createCategory.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(createCategory.fulfilled, (state, action) => {
+      state.categories.push(action.payload);
+    });
+    builder.addCase(createCategory.rejected, (state, action) => {
+      state.error = action.error.message || 'Failed to create category';
+    });
+
+    builder.addCase(deleteCategory.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(deleteCategory.fulfilled, (state, action) => {
+      state.categories = state.categories.filter(category => category.id !== action.payload);
+    });
+    builder.addCase(deleteCategory.rejected, (state, action) => {
+      state.error = action.error.message || 'Failed to delete category';
+    });
+
 
   },
 });

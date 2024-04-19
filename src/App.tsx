@@ -9,6 +9,7 @@ import UpdateProduct from './pages/UpdateProduct';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
 import UpdateProfile from './pages/UpdateProfile';
+import CategoryManagement from './pages/CategoryManagement';
 import CustomThemeProvider from './components/ThemeContext';
 import { CssBaseline, Container, Box } from '@mui/material';
 
@@ -28,6 +29,7 @@ const App = () => {
             <Route path="/auth" element={<Auth />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/update-profile/:userId" element={<UpdateProfile />} />
+            <Route path="/manage-categories" element={<CategoryManagement />} />
           </Routes>
         </Box>
       </Container>
