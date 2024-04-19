@@ -109,14 +109,10 @@ export const updateProduct = createAsyncThunk(
 export const getProductsWithFilters = createAsyncThunk(
   'product/fetchProductsWithFilters',
   async (filters: FilterParams, { rejectWithValue }) => {
-    let query = `${BASE_URL}/products?`;
-    const params = [];
-    if (filters.title) params.push(`title=${filters.title}`);
-    if (filters.priceMin !== undefined) params.push(`price_min=${filters.priceMin}`);
-    if (filters.priceMax !== undefined) params.push(`price_max=${filters.priceMax}`);
-    if (filters.categoryId !== undefined) params.push(`categoryId=${filters.categoryId}`);
-    
+    let query = `${BASE_URL}/products/filter?`;
+    const params = Object.entries(filters).map(([key, value]) => `${key}=${encodeURIComponent(value)}`);
     query += params.join('&');
+    console.log(query);
 
     try {
       const response = await axios.get(query);

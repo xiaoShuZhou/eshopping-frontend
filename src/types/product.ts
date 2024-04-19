@@ -42,7 +42,7 @@ export type FilterParams = {
   title?: string;
   priceMin?: number;
   priceMax?: number;
-  categoryId?: number;
+  categoryId?: string;
 }
 
 export type PaginationProps = {
