@@ -4,7 +4,7 @@ import cartReducer from './slices/cartSlice';
 import userReducer from './slices/userSlice';
 import categoryReducer from './slices/categorySlice';
 import orderReducer from './slices/orderSlice';
-import orderItmeRducer from './slices/orderItemSlice';
+
 
 export const store = configureStore({
   reducer: {
@@ -13,7 +13,6 @@ export const store = configureStore({
     user: userReducer,
     category: categoryReducer,
     order: orderReducer,
-    orderItem: orderItmeRducer,
   },
 });
 // console.log(store.getState())

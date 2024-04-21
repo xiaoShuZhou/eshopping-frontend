@@ -11,11 +11,11 @@ export type Order = {
     id: string;
     user: User;
     items: OrderItem[];
-    shippingAddress: string;
+    createdAt: string;
   }
 
 export type OrderState = {
-    order: Order | null;
+    orders: Order[] | null;
     loading: boolean;
     error: string | null;
   }

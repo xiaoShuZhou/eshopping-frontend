@@ -21,6 +21,7 @@ const ProductDetail = () => {
   const { products, loading, error } = useAppSelector((state) => state.product);
   const cartItems = useAppSelector((state) => state.cart.items);
   const userRole = useAppSelector((state) => state.user.user?.role);
+  const user = useAppSelector((state) => state.user.user);
 
   const product = products.find(p => p.id === productId);
   const [isInCart, setIsInCart] = useState(false);
@@ -74,10 +75,14 @@ const ProductDetail = () => {
         </CardContent>
       </Card>
       <Box>
-        {isInCart ? (
-          <Button variant="contained" disabled>Item already added to cart</Button>
-        ) : (
-          <Button variant="contained" color="primary" onClick={handleAddToCart}>Add to Cart</Button>
+        {user && (
+          <>
+            {isInCart ? (
+              <Button variant="contained" disabled>Item already added to cart</Button>
+            ) : (
+              <Button variant="contained" color="primary" onClick={handleAddToCart}>Add to Cart</Button>
+            )}
+          </>
         )}
         {userRole === 'admin' && (
           <>

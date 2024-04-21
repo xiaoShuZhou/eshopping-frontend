@@ -4,16 +4,29 @@ import axios, { AxiosError } from 'axios';
 
 import { BASE_URL } from '../../misc/constants';
 import { Order,OrderState } from '../../types/order';
+import { CartItem } from '../../types/cart';
+import { User } from '../../types/user';
 
 const initialState: OrderState = {
-  order: null,
+  orders: [],
   loading: false,
   error: null,
 };
 
-export const createOrder = createAsyncThunk(
-  'order/createOrder',
-  async (order: Order, { rejectWithValue }) => {
+export const submitOrderFromCart = createAsyncThunk(
+  'order/submitOrderFromCart',
+  async ({ cartItems, user }: { cartItems: CartItem[], user: User }, { rejectWithValue }) => {
+    if (cartItems.length === 0) {
+      return rejectWithValue('Cart is empty');
+    }
+
+    const orderItems = cartItems.map(item => ({
+      product: item.id,
+      quantity: item.quantity
+    }));
+
+    const order = { user: user?.id, items: orderItems };
+
     try {
       const response = await axios.post(`${BASE_URL}/orders`, order);
       return response.data;
@@ -24,25 +37,28 @@ export const createOrder = createAsyncThunk(
   }
 );
 
-export const getOrder = createAsyncThunk(
-  'order/getOrder',
-  async (orderId: string, { rejectWithValue }) => {
+export const getOrdersByUserId = createAsyncThunk(
+  'order/getOrdersByUserId',
+  async (userId: string, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BASE_URL}/orders/${orderId}`);
+      const response = await axios.get(`${BASE_URL}/orders/getOrdersByuser/${userId}`);
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
-      return rejectWithValue(err.response?.data || 'Failed to fetch order');
+      return rejectWithValue(err.response?.data || 'Failed to fetch orders');
     }
   }
 );
+
+
 
 export const deleteOrder = createAsyncThunk(
   'order/deleteOrder',
   async (orderId: string, { rejectWithValue }) => {
     try {
+      console.log('orderId', orderId);
       const response = await axios.delete(`${BASE_URL}/orders/${orderId}`);
-      if (response.status === 204) {
+      if (response.status === 200) {
         return orderId;
       } else {
         return rejectWithValue('Failed to delete the order');
@@ -54,130 +70,57 @@ export const deleteOrder = createAsyncThunk(
   }
 );
 
-export const addOrderItemToOrder = createAsyncThunk(
-  'order/addOrderItemToOrder',
-  async ({ orderId, orderItem }: { orderId: string; orderItem: any }, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(`${BASE_URL}/orders/${orderId}/items`, orderItem);
-      return response.data;
-    } catch (error) {
-      const err = error as AxiosError;
-      return rejectWithValue(err.response?.data || 'Failed to add order item');
-    }
-  }
-);
-
-export const deleteOrderItemFromOrder = createAsyncThunk(
-  'order/removeOrderItemFromOrder',
-  async ({ orderId, orderItemId }: { orderId: string; orderItemId: string }, { rejectWithValue }) => {
-    try {
-      const response = await axios.delete(`${BASE_URL}/orders/${orderId}/items/${orderItemId}`);
-      return response.data;
-    } catch (error) {
-      const err = error as AxiosError;
-      return rejectWithValue(err.response?.data || 'Failed to remove order item');
-    }
-  }
-);
-
-export const getOrderById = createAsyncThunk(
-  'order/getOrderById',
-  async (orderId: string, { rejectWithValue }) => {
-    try {
-      const response = await axios.get(`${BASE_URL}/orders/${orderId}`);
-      if (response.status === 200) {
-        return response.data;
-      } else {
-        return rejectWithValue('Order not found');
-      }
-    } catch (error) {
-      const err = error as AxiosError;
-      return rejectWithValue(err.response?.data || 'Failed to fetch order');
-    }
-  }
-);
 
 const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(createOrder.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(createOrder.fulfilled, (state, action) => {
-      state.order = action.payload;
-      state.loading = false;
-      state.error = null;
-    });
-    builder.addCase(createOrder.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
+    builder
+      .addCase(submitOrderFromCart.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(submitOrderFromCart.fulfilled, (state, action) => {
+        state.loading = false;
+        if (state.orders) {
+          state.orders.push(action.payload);
+          console.log('state.orders:', state.orders);
+        }
+      })
+      .addCase(submitOrderFromCart.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(getOrdersByUserId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getOrdersByUserId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orders = action.payload;
+      })
+      .addCase(getOrdersByUserId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(deleteOrder.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteOrder.fulfilled, (state, action) => {
+        state.loading = false;
 
-    builder.addCase(getOrder.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(getOrder.fulfilled, (state, action) => {
-      state.order = action.payload;
-      state.loading = false;
-      state.error = null;
-    });
-    builder.addCase(getOrder.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
-
-    builder.addCase(deleteOrder.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(deleteOrder.fulfilled, (state, action) => {
-      state.order = null;
-      state.loading = false;
-      state.error = null;
-    });
-    builder.addCase(deleteOrder.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
-
-    builder.addCase(addOrderItemToOrder.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(addOrderItemToOrder.fulfilled, (state, action) => {
-      state.order = action.payload;
-      state.loading = false;
-      state.error = null;
-    });
-    builder.addCase(addOrderItemToOrder.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
-
-    builder.addCase(deleteOrderItemFromOrder.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(deleteOrderItemFromOrder.fulfilled, (state, action) => {
-      state.order = action.payload;
-      state.loading = false;
-      state.error = null;
-    });
-    builder.addCase(deleteOrderItemFromOrder.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
-    builder.addCase(getOrderById.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(getOrderById.fulfilled, (state, action) => {
-      state.order = action.payload;
-      state.loading = false;
-      state.error = null;
-    });
-    builder.addCase(getOrderById.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
+        if (state.orders) {
+          state.orders = state.orders.filter(order => order.id !== action.payload);
+        }
+      })
+      .addCase(deleteOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+  
+    
   }
 });
 

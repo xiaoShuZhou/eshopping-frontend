@@ -47,11 +47,18 @@ const Header = () => {
             <Button color="inherit" component={RouterLink} to={user ? '/profile' : '/auth'}>
               {user ? 'Profile' : 'Login'}
             </Button>
-            <Button color="inherit" component={RouterLink} to="/cart">
-              <Badge badgeContent={cartItems.length} color="secondary">
-                <ShoppingCartRoundedIcon />
-              </Badge>
-            </Button>
+            {user && ( // Conditional rendering based on user being logged in
+              <>
+                <Button color="inherit" component={RouterLink} to="/order">
+                  Orders
+                </Button>
+                <Button color="inherit" component={RouterLink} to="/cart">
+                  <Badge badgeContent={cartItems.length} color="secondary">
+                    <ShoppingCartRoundedIcon />
+                  </Badge>
+                </Button>
+              </>
+            )}
             <ThemeToggleButton />
           </Grid>
           {isMobile && (

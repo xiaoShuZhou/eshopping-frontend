@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { removeFromCart, increaseQuantity, decreaseQuantity, emptyCart } from '../redux/slices/cartSlice';
+import { submitOrderFromCart } from '../redux/slices/orderSlice';
 import { RootState } from '../redux/store'; // Adjust the path as needed
 import { Button, Grid, Card, CardContent, Typography, CardActions, IconButton, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -10,6 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 const Cart: React.FC = () => {
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user.user);
   const cartItems = useAppSelector((state: RootState) => state.cart.items);
 
   const handleRemoveFromCart = (id: string) => {
@@ -25,8 +27,16 @@ const Cart: React.FC = () => {
   };
 
   const handleCheckout = () => {
-    dispatch(emptyCart());
-    window.alert("Successfully shopping!");
+    if (user) {
+      dispatch(submitOrderFromCart({ cartItems, user })).unwrap().then(() => {
+        dispatch(emptyCart());
+        window.alert("Successfully shopping!");
+      }).catch((error) => {
+        console.error('Failed to submit order:', error);
+      });
+    } else {
+      console.error('User is null');
+    }
   };
 
   const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
