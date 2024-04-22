@@ -129,7 +129,6 @@ export const getProductsWithFilters = createAsyncThunk(
     let query = `${BASE_URL}/products/filter?`;
     const params = Object.entries(filters).map(([key, value]) => `${key}=${encodeURIComponent(value)}`);
     query += params.join('&');
-    console.log(query);
 
     try {
       const response = await axios.get(query);

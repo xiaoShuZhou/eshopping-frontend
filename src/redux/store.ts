@@ -24,6 +24,7 @@ export const testStore = () => {
       user: userReducer,
       cart: cartReducer,
       category: categoryReducer,
+      order: orderReducer,
     },
   });
 };

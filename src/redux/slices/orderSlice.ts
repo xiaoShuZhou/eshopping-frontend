@@ -99,7 +99,6 @@ const orderSlice = createSlice({
         state.loading = false;
         if (state.orders) {
           state.orders.push(action.payload);
-          console.log('state.orders:', state.orders);
         }
       })
       .addCase(submitOrderFromCart.rejected, (state, action) => {
