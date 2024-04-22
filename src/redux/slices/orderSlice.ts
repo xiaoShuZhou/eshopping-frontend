@@ -28,7 +28,12 @@ export const submitOrderFromCart = createAsyncThunk(
     const order = { user: user?.id, items: orderItems };
 
     try {
-      const response = await axios.post(`${BASE_URL}/orders`, order);
+      const token = localStorage.getItem('token');
+      const response = await axios.post(`${BASE_URL}/orders`, order, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
@@ -41,7 +46,12 @@ export const getOrdersByUserId = createAsyncThunk(
   'order/getOrdersByUserId',
   async (userId: string, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BASE_URL}/orders/getOrdersByuser/${userId}`);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${BASE_URL}/orders/getOrdersByuser/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
@@ -56,8 +66,12 @@ export const deleteOrder = createAsyncThunk(
   'order/deleteOrder',
   async (orderId: string, { rejectWithValue }) => {
     try {
-      console.log('orderId', orderId);
-      const response = await axios.delete(`${BASE_URL}/orders/${orderId}`);
+      const token = localStorage.getItem('token');
+      const response = await axios.delete(`${BASE_URL}/orders/${orderId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       if (response.status === 200) {
         return orderId;
       } else {

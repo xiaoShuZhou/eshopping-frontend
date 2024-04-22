@@ -59,7 +59,11 @@ export const updateProfile = createAsyncThunk(
   'user/updateProfile',
   async ({ id, updatedUser }: { id: string; updatedUser: UpdatedUser }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${BASE_URL}/users/${id}`, updatedUser);
+      const response = await axios.put(`${BASE_URL}/users/${id}`, updatedUser, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
       return response.data;
     } catch (error) {
       const err = error as AxiosError;

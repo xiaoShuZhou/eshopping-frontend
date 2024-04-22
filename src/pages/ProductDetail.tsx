@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { addToCart } from '../redux/slices/cartSlice';
 import { Box, Button, Card, CardContent, CardMedia, CircularProgress, Typography, Container } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 const DetailContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
@@ -25,6 +26,7 @@ const ProductDetail = () => {
 
   const product = products.find(p => p.id === productId);
   const [isInCart, setIsInCart] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (productId) {
@@ -42,7 +44,14 @@ const ProductDetail = () => {
 
   const handleDeleteProduct = () => {
     if (product && productId && window.confirm('Are you sure you want to delete this product?')) {
-      dispatch(deleteProduct(productId));
+      dispatch(deleteProduct(productId)).unwrap().then(() => {
+        window.alert('Product deleted successfully!');
+        navigate('/');
+      }
+      ).catch((error) => {
+        console.error('Delete product failed:', error);
+        window.alert('Delete product failed!');
+      });
     }
   };
 

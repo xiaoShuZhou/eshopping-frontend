@@ -37,7 +37,7 @@ const Header = () => {
             {userRole === 'admin' && (
               <>
                 <Button color="inherit" component={RouterLink} to="/post">
-                  Blog
+                  Products
                 </Button>
                 <Button color="inherit" component={RouterLink} to="/manage-categories">
                   Categories

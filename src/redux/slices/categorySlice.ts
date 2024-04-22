@@ -35,7 +35,12 @@ export const createCategory = createAsyncThunk(
   'category/createCategory',
   async (category: { name: string }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/categories`, category);
+      const token = localStorage.getItem('token');
+      const response = await axios.post(`${BASE_URL}/categories`, category, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
@@ -52,8 +57,12 @@ export const deleteCategory = createAsyncThunk(
   'category/deleteCategory',
   async (categoryId: string, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`${BASE_URL}/categories/${categoryId}`);
-      console.log(response.data,'response');
+      const token = localStorage.getItem('token');
+      const response = await axios.delete(`${BASE_URL}/categories/${categoryId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       if (response.status === 204) {
         return categoryId;
       } else {

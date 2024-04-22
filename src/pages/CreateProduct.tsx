@@ -29,6 +29,7 @@ const CreateProduct: React.FC = () => {
       try {
         const file = files[0];
         const imageUrl = await uploadImage(file);
+        console.log('Image uploaded:', imageUrl);
         setNewProduct({ ...newProduct, image: imageUrl });
       } catch (error) {
         console.error('Error uploading image:', error);
@@ -42,7 +43,6 @@ const CreateProduct: React.FC = () => {
       window.alert('Please fill in all fields before creating a product.');
       return;
     }
-    console.log('Creating product:', newProduct);
     dispatch(createProduct(newProduct)).unwrap().then(() => {
       setNewProduct({
         title: '',

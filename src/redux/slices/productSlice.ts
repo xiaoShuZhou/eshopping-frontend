@@ -51,14 +51,20 @@ export const deleteProduct = createAsyncThunk(
   'product/deleteProduct',
   async (productId: string, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(BASE_URL + `/products/${productId}`);
-      if (response.data === true) {
+      const token = localStorage.getItem('token');
+      const response = await axios.delete(BASE_URL + `/products/${productId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (response.status === 204) {
         return productId;
       } else {
         return rejectWithValue('Failed to delete the product');
       }
     } catch (error) {
       const err = error as AxiosError;
+      console.error(err);
       if (err.response) {
         return rejectWithValue(err.response.data);
       } else {
@@ -72,7 +78,12 @@ export const createProduct = createAsyncThunk(
   'product/createProduct',
   async (newProduct: NewProduct, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/products`, newProduct);
+      const token = localStorage.getItem('token');
+      const response = await axios.post(`${BASE_URL}/products`, newProduct, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       return response.data;
     } catch (error) {
       const err = error as AxiosError; // Type assertion here
@@ -81,6 +92,7 @@ export const createProduct = createAsyncThunk(
         return rejectWithValue(err.response.data);
       } else {
         console.error('An unexpected error occurred');
+        console.error(err);
         return rejectWithValue('An unexpected error occurred');
       }
     }
@@ -91,7 +103,12 @@ export const updateProduct = createAsyncThunk(
   'product/updateProduct',
   async ({ id, updateData }: { id: string; updateData: UpdatedProduct }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${BASE_URL}/products/${id}`, updateData);
+      const token = localStorage.getItem('token');
+      const response = await axios.put(`${BASE_URL}/products/${id}`, updateData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
