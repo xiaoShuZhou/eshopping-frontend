@@ -1,11 +1,12 @@
 import axios from "axios";
+import { BASE_URL } from "./constants";
 
 async function uploadImage(file: File): Promise<string> {
   const formData = new FormData();
   formData.append('avatar', file);
 
   try {
-    const response = await axios.post('http://localhost:3001/api/v1/images/upload-avatar', formData, {
+    const response = await axios.post(`${BASE_URL}/images/upload-avatar`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data', 
       },
