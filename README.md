@@ -8,13 +8,11 @@
 
   
 
-The website live here: https://eshopping-website-iota.vercel.app/
+The website live here: [https://eshopping-website-iota.vercel.app/](https://eshopping-frontend-ad5cxysro-seans-projects-9ba85089.vercel.app/)
 
-The website APIs here:
+The website APIs live here: https://eshopping-api.onrender.com
 
-Frontend repo:
-
-Backend repo:
+Backend repo: https://github.com/xiaoShuZhou/eshopping-API/tree/SeanBackend
   
 
 All features achieved:
